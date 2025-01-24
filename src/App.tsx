@@ -1,35 +1,39 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { Canvas, Rect } from "fabric";
+import { Canvas } from "fabric";
 
 function App() {
-  const canvasRef = useRef(null);
+    const canvasRef = useRef(null);
+    const [canvas, setCanvas] = useState<Canvas | null>(null);
 
-  useEffect(() => {
-    canvasRef.current = new Canvas("canvas", {
-      height: 800,
-      width: 800,
-      backgroundColor: "#f5f5f5",
-      selection: false,
-      renderOnAddRemove: true,
+    window.addEventListener("resize", () => {
+        if (canvas) {
+            canvas.setDimensions({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        }
     });
 
-    const rect = new Rect({
-      top: 50,
-      left: 50,
-      width: 50,
-      height: 50,
-      fill: "red",
-    });
+    useEffect(() => {
+        if (canvasRef.current) {
+            const initCanvas = new Canvas(canvasRef.current, {
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
 
-    canvasRef.current.add(rect);
-  }, []);
+            initCanvas.backgroundColor = "#fafafa";
+            initCanvas.renderAll();
 
-  return (
-    <div className="h-full w-full">
-      <canvas id="canvas"></canvas>
-    </div>
-  );
+            setCanvas(initCanvas);
+
+            return () => {
+                initCanvas.dispose();
+            };
+        }
+    }, []);
+
+    return <canvas ref={canvasRef}></canvas>;
 }
 
 export default App;
