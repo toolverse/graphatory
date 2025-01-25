@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { Canvas } from "fabric";
+import TitleCard, { LogoAndTitle, UndoRedo } from "./TitleCard";
 
 function App() {
     const canvasRef = useRef(null);
@@ -33,7 +34,15 @@ function App() {
         }
     }, []);
 
-    return <canvas ref={canvasRef}></canvas>;
+    return (
+        <>
+            <canvas ref={canvasRef}></canvas>
+            <TitleCard>
+                <LogoAndTitle></LogoAndTitle>
+                <UndoRedo></UndoRedo>
+            </TitleCard>
+        </>
+    );
 }
 
 export default App;
