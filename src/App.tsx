@@ -2,6 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { Canvas } from "fabric";
 import TitleCard, { LogoAndTitle, UndoRedo } from "./TitleCard";
+import ToolBar, { ToolIcon } from "./Toolbar";
+import {
+    GripHorizontal,
+    MousePointer2,
+    MoveUpRight,
+    Plus,
+    Shapes,
+    Type,
+    Workflow,
+} from "lucide-react";
+
+//ADD TOOLBAR NEXT WHICH CAN BE MOVED AROUND
 
 function App() {
     const canvasRef = useRef(null);
@@ -23,7 +35,7 @@ function App() {
                 height: window.innerHeight,
             });
 
-            initCanvas.backgroundColor = "#fafafa";
+            initCanvas.backgroundColor = "#efefef";
             initCanvas.renderAll();
 
             setCanvas(initCanvas);
@@ -41,6 +53,37 @@ function App() {
                 <LogoAndTitle></LogoAndTitle>
                 <UndoRedo></UndoRedo>
             </TitleCard>
+            <ToolBar>
+                <ToolIcon grip={true}>
+                    <GripHorizontal
+                        color="#535353"
+                        strokeWidth={1.5}
+                        size={18}
+                    />
+                </ToolIcon>
+                <ToolIcon tooltip="selection">
+                    <MousePointer2
+                        color="#535353"
+                        size={20}
+                        strokeWidth={1.5}
+                    />
+                </ToolIcon>
+                <ToolIcon>
+                    <Workflow color="#535353" size={20} strokeWidth={1.5} />
+                </ToolIcon>
+                <ToolIcon>
+                    <Shapes color="#535353" size={20} strokeWidth={1.5} />
+                </ToolIcon>
+                <ToolIcon>
+                    <MoveUpRight color="#535353" size={20} strokeWidth={1.5} />
+                </ToolIcon>
+                <ToolIcon>
+                    <Type color="#535353" size={20} strokeWidth={1.5} />
+                </ToolIcon>
+                <ToolIcon>
+                    <Plus color="#535353" size={20} strokeWidth={1.5} />
+                </ToolIcon>
+            </ToolBar>
         </>
     );
 }
