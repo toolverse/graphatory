@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { Canvas } from "fabric";
+import { Canvas, InteractiveFabricObject } from "fabric";
 import TitleCard, { LogoAndTitle, UndoRedo } from "./TitleCard";
 import ToolBar, { ToolIcon } from "./Toolbar";
 import {
@@ -12,8 +12,6 @@ import {
     Type,
     Workflow,
 } from "lucide-react";
-
-//ADD TOOLBAR NEXT WHICH CAN BE MOVED AROUND
 
 function App() {
     const canvasRef = useRef(null);
@@ -45,6 +43,17 @@ function App() {
             };
         }
     }, []);
+
+    InteractiveFabricObject.ownDefaults = {
+        ...InteractiveFabricObject.ownDefaults,
+        cornerStyle: "circle",
+        cornerStrokeColor: "black",
+        cornerColor: "white",
+        transparentCorners: false,
+        borderColor: "black",
+        borderScaleFactor: 2,
+        padding: 10,
+    };
 
     return (
         <>
