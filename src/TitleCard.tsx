@@ -14,7 +14,6 @@ export function LogoAndTitle() {
     const [width, setWidth] = useState(64);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        // console.log(width);
         console.log(e.target.clientWidth);
         setWidth((e.target.value.length + 1) * 8);
     };
@@ -35,17 +34,17 @@ export function LogoAndTitle() {
                         style={{ width: width }}
                         className="focus:outline-none font-REM"
                     />
-                    <ToolIcon size={16}>
+                    <ToolIcon size={16} tooltip="more options">
                         <ChevronDown size={14} />
                     </ToolIcon>
                 </div>
             </div>
             <div className="flex pl-2">
-                <ToolIcon>
-                    <Undo color="#535353" size={20} strokeWidth={1.5} />
+                <ToolIcon tooltip="undo">
+                    <Undo color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
-                <ToolIcon>
-                    <Redo color="#535353" size={20} strokeWidth={1.5} />
+                <ToolIcon tooltip="redo">
+                    <Redo color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
             </div>
         </div>

@@ -7,7 +7,7 @@ import {
 
 export default function ToolBar({ children }: { children: JSX.Element[] }) {
     return (
-        <div className="fixed top-[40%] pb-2 left-4 w-12 h-auto bg-white flex flex-col justify-between items-center rounded-md shadow-md gap-1">
+        <div className="fixed top-[40%] p-2 left-4 w-12 h-auto bg-white flex flex-col justify-between items-center rounded-md shadow-md gap-1">
             {children}
         </div>
     );
@@ -47,7 +47,7 @@ export function ToolIcon({
                                                 size +
                                                 "px] "
                                               : "w-[40px] h-[40px] ") +
-                                          "hover:bg-primary hover:bg-opacity-20 " +
+                                          "hover:bg-primary hover:bg-opacity-40 " +
                                           classes
                                 }
                             >
@@ -71,7 +71,7 @@ export function ToolIcon({
                         : (size
                               ? "w-[" + size + "px] h-[" + size + "px] "
                               : "w-[40px] h-[40px] ") +
-                          "hover:bg-primary hover:bg-opacity-20 " +
+                          "hover:bg-primary hover:bg-opacity-40 " +
                           classes
                 }
             >
