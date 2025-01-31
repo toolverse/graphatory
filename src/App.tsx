@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import {
     Canvas,
+    Circle,
+    controlsUtils,
     Group,
     InteractiveFabricObject,
     Path,
@@ -30,12 +32,39 @@ function App() {
 
     window.addEventListener("resize", () => {
         if (canvas) {
-            canvas.setDimensions({
-                width: window.innerWidth,
-                height: window.innerHeight,
-            });
+            //The following logic is correct but gives a error needs to be debugged
+            // canvas.setDimensions({
+            //     width: window.innerWidth,
+            //     height: window.innerHeight,
+            // });
+
+            //The following logic is depreciated needs to be changed
+            canvas.setWidth(window.innerWidth);
+            canvas.setHeight(window.innerHeight);
         }
     });
+
+    function backgroundGrid() {
+        const circles = [];
+        const offset = 5;
+        const spacing = 17;
+        for (let i = offset; i < window.outerWidth; i += spacing) {
+            for (let j = offset; j < window.outerHeight; j += spacing) {
+                const circle = new Circle({
+                    top: j,
+                    left: i,
+                    radius: 1,
+                    fill: "gray",
+                    opacity: 0.5,
+                });
+                circles.push(circle);
+            }
+        }
+        return new Group(circles, {
+            selectable: false,
+            evented: false,
+        });
+    }
 
     useEffect(() => {
         if (canvasRef.current) {
@@ -48,6 +77,7 @@ function App() {
             initCanvas.renderAll();
 
             setCanvas(initCanvas);
+            initCanvas.add(backgroundGrid());
 
             return () => {
                 initCanvas.dispose();
@@ -137,7 +167,6 @@ function App() {
 
             nodeGroup.on("mousedblclick", () => {
                 text.enterEditing();
-                console.log(nodeGroup.aCoords);
             });
 
             nodeGroup.on("scaling", () => {
@@ -171,14 +200,12 @@ function App() {
 
         refillGuidlines();
 
-        console.log(guidePoints);
-
         function refillGuidlines() {
-            setGuidePoints([]);
             if (canvas) {
-                canvas.getObjects().forEach((o) => {
-                    if (o.type != "path") {
-                        const coords = o.aCoords;
+                setGuidePoints([]);
+                canvas.getObjects().forEach((obj) => {
+                    if (obj.type != "path") {
+                        const coords = obj.aCoords;
                         const p1 = new Point({
                             x: (coords.tl.x + coords.tr.x) / 2,
                             y: coords.tl.y,
@@ -216,7 +243,6 @@ function App() {
             let ret = point;
             guidePoints.forEach((p) => {
                 if (close(p, point)) {
-                    console.log(p);
                     ret = p;
                 }
             });
@@ -225,8 +251,6 @@ function App() {
 
         function close(p: Point, point: Point) {
             const tolerence = 15;
-            console.log("mouse pointer " + point);
-            // console.log("other pointer" + p);
             if (point.x <= p.x + tolerence && point.x >= p.x - tolerence) {
                 if (point.y <= p.y + tolerence && point.y >= p.y - tolerence) {
                     return true;
@@ -245,17 +269,19 @@ function App() {
 
         function startDrawing(event: TPointerEventInfo<TPointerEvent>) {
             if (canvas) {
-                const pointer = snap(canvas.getViewportPoint(event.e));
-                startPoint = pointer;
-                Line = new Path(getPath(pointer, pointer), {
-                    id: "added-line",
-                    fill: null,
-                    strokeWidth: 2,
-                    stroke: "black",
-                });
+                if (!drawing) {
+                    const pointer = snap(canvas.getViewportPoint(event.e));
+                    startPoint = pointer;
+                    Line = new Path(getPath(pointer, pointer), {
+                        id: "added-line",
+                        fill: null,
+                        strokeWidth: 2,
+                        stroke: "black",
+                    });
 
-                canvas.add(Line);
-                drawing = true;
+                    canvas.add(Line);
+                    drawing = true;
+                }
             }
         }
 
@@ -266,7 +292,6 @@ function App() {
                     const pointer = snap(canvas.getViewportPoint(event.e));
                     canvas.remove(Line);
                     Line = new Path(getPath(startPoint, pointer), {
-                        id: "added-line",
                         fill: null,
                         strokeWidth: 2,
                         stroke: "black",
@@ -276,31 +301,62 @@ function App() {
             }
         }
 
-        function stopDrawing() {
+        function stopDrawing(event: TPointerEventInfo<TPointerEvent>) {
             if (canvas) {
-                canvas.selection = true;
-                drawing = false;
-                canvas.getObjects().forEach((a) => {
-                    a.set({ selectable: true });
-                });
-                deactivate();
+                const pointer = canvas.getViewportPoint(event.e);
+                if (!close(startPoint, pointer)) {
+                    canvas.selection = true;
+                    drawing = false;
+                    canvas.getObjects().forEach((a) => {
+                        a.set({ selectable: true });
+                    });
+                    deactivate();
+                    Line.on("mousedown", () => {
+                        Line.cornerStyle = "circle";
+                        Line.hasBorders = false;
+                        Line.controls = controlsUtils.createPathControls(Line);
+                    });
+                }
             }
         }
 
         function getPath(startpointer: Point, endpointer: Point) {
+            const xheavy =
+                Math.abs(endpointer.x - startPoint.x) >
+                Math.abs(endpointer.y - startPoint.y);
+            if (xheavy) {
+                return (
+                    "M " +
+                    startpointer.x +
+                    " " +
+                    startpointer.y +
+                    " C " +
+                    (startpointer.x + endpointer.x) / 2 +
+                    " " +
+                    startpointer.y +
+                    " " +
+                    (startpointer.x + endpointer.x) / 2 +
+                    " " +
+                    endpointer.y +
+                    " " +
+                    endpointer.x +
+                    " " +
+                    endpointer.y
+                );
+            }
             return (
                 "M " +
                 startpointer.x +
                 " " +
                 startpointer.y +
                 " C " +
-                (startpointer.x + endpointer.x) / 2 +
+                startpointer.x +
                 " " +
-                startpointer.y +
+                (startpointer.y + endpointer.y) / 2 +
                 " " +
-                (startpointer.x + endpointer.x) / 2 +
+                endpointer.x +
                 " " +
-                endpointer.y +
+                (startpointer.y + endpointer.y) / 2 +
                 " " +
                 endpointer.x +
                 " " +
@@ -309,9 +365,40 @@ function App() {
         }
     };
 
+    const addText = () => {
+        if (canvas) {
+            const nodeWidth = 180;
+            const nodeHeight = 50;
+            const defaultAccentWidth = 15;
+            const defaultTextSize = 16;
+            const padding = 5;
+
+            const text = new Textbox("Node1", {
+                left: 425,
+                top: 300,
+                textAlign: "center",
+                fontSize: defaultTextSize,
+                lockScalingY: true,
+                fill: "black",
+                width: nodeWidth - defaultAccentWidth - 2 * padding,
+                height: nodeHeight - 2 * padding,
+                fontFamily: "REM",
+            });
+
+            text.on("scaling", () => {
+                text.set({
+                    fontSize: defaultTextSize / text.scaleX,
+                    top: nodeHeight / 2 / text.scaleY / defaultTextSize,
+                });
+            });
+
+            canvas.add(text);
+        }
+    };
+
     function test() {
         if (canvas) {
-            console.log("haha");
+            console.log("hello there");
         }
     }
 
@@ -335,7 +422,7 @@ function App() {
                 <ToolIcon tooltip="add line" onClick={addLine}>
                     <MoveUpRight color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
-                <ToolIcon tooltip="add text">
+                <ToolIcon tooltip="add text" onClick={addText}>
                     <Type color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
                 <ToolIcon tooltip="add custom objects" onClick={test}>
