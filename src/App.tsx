@@ -24,6 +24,21 @@ import {
     Type,
     Workflow,
 } from "lucide-react";
+import SettingBox from "./settingBox";
+import { FabricObject } from "fabric";
+
+declare module "fabric" {
+    interface FabricObject {
+        id?: string;
+        name?: string;
+    }
+    interface SerializedObjectProps {
+        id?: string;
+        name?: string;
+    }
+}
+
+FabricObject.customProperties = ["name", "id"];
 
 function App() {
     const canvasRef = useRef(null);
@@ -62,7 +77,11 @@ function App() {
         }
         return new Group(circles, {
             selectable: false,
+            interactive: false,
+            lockMovementX: true,
+            lockMovementY: true,
             evented: false,
+            name: "dot-matrix-background",
         });
     }
 
@@ -134,7 +153,7 @@ function App() {
                 ry: rounded,
                 left: 0,
                 top: 0,
-                fill: "red",
+                fill: "#FF0000",
             });
 
             const clipRect = new Rect({
@@ -308,7 +327,9 @@ function App() {
                     canvas.selection = true;
                     drawing = false;
                     canvas.getObjects().forEach((a) => {
-                        a.set({ selectable: true });
+                        if (a.name != "dot-matrix-background") {
+                            a.set({ selectable: true });
+                        }
                     });
                     deactivate();
                     Line.on("mousedown", () => {
@@ -379,7 +400,7 @@ function App() {
                 textAlign: "center",
                 fontSize: defaultTextSize,
                 lockScalingY: true,
-                fill: "black",
+                fill: "#3D3D3D",
                 width: nodeWidth - defaultAccentWidth - 2 * padding,
                 height: nodeHeight - 2 * padding,
                 fontFamily: "REM",
@@ -405,6 +426,7 @@ function App() {
     return (
         <>
             <canvas ref={canvasRef}></canvas>
+            <SettingBox canvas={canvas}></SettingBox>
             <TitleCard>
                 <LogoAndTitle></LogoAndTitle>
                 <UndoRedo></UndoRedo>
