@@ -14,7 +14,6 @@ export function LogoAndTitle() {
     const [width, setWidth] = useState(64);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.clientWidth);
         setWidth((e.target.value.length + 1) * 8);
     };
 

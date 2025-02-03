@@ -19,7 +19,6 @@ import ToolBar, { ToolIcon } from "./Toolbar";
 import {
     MousePointer2,
     MoveUpRight,
-    Plus,
     Shapes,
     Type,
     Workflow,
@@ -312,10 +311,11 @@ function App() {
                     canvas.remove(Line);
                     Line = new Path(getPath(startPoint, pointer), {
                         fill: null,
-                        strokeWidth: 2,
+                        strokeWidth: 3,
                         stroke: "black",
                     });
                     canvas.add(Line);
+                    canvas.renderAll();
                 }
             }
         }
@@ -417,11 +417,20 @@ function App() {
         }
     };
 
-    function test() {
+    const addShapes = () => {
         if (canvas) {
-            console.log("hello there");
+            const rect = new Rect({
+                width: 360,
+                height: 120,
+                fill: null,
+                stroke: "black",
+                strokeWidth: 3,
+                rx: 10,
+            });
+            canvas.centerObject(rect);
+            canvas.add(rect);
         }
-    }
+    };
 
     return (
         <>
@@ -438,7 +447,7 @@ function App() {
                 <ToolIcon tooltip="add Node" onClick={addNode}>
                     <Workflow color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
-                <ToolIcon tooltip="add shapes">
+                <ToolIcon tooltip="add shapes" onClick={addShapes}>
                     <Shapes color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
                 <ToolIcon tooltip="add line" onClick={addLine}>
@@ -447,9 +456,9 @@ function App() {
                 <ToolIcon tooltip="add text" onClick={addText}>
                     <Type color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
-                <ToolIcon tooltip="add custom objects" onClick={test}>
+                {/* <ToolIcon tooltip="add custom objects" onClick={test}>
                     <Plus color="#000" size={20} strokeWidth={1.5} />
-                </ToolIcon>
+                </ToolIcon> */}
             </ToolBar>
         </>
     );
