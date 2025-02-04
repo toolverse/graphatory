@@ -1,6 +1,7 @@
 import { ChevronDown, Redo, Undo } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import { ToolIcon } from "./Toolbar";
+import logo from "./assets/logos/graphatory-logo-long-black.png";
 
 export default function TitleCard({ children }: { children: JSX.Element[] }) {
     return (
@@ -20,11 +21,7 @@ export function LogoAndTitle() {
     return (
         <div className="flex divide-x divide-[#EFEFEF] gap-4 justify-between">
             <div className="flex gap-6 items-center justify-between">
-                <img
-                    className="h-8"
-                    src="/src/assets/logos/graphatory-logo-long-black.png"
-                    alt="Logo Image"
-                />
+                <img className="h-8" src={logo} alt="Logo Image" />
                 <div className="flex gap-1">
                     <input
                         type="text"
