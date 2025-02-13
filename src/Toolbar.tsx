@@ -4,6 +4,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { MouseEventHandler } from "react";
 
 export default function ToolBar({ children }: { children: JSX.Element[] }) {
     return (
@@ -23,7 +24,7 @@ export function ToolIcon({
     children: JSX.Element;
     grip?: boolean;
     toggle?: boolean;
-    onClick?: () => void;
+    onClick?: void | (() => void);
     tooltip?: string;
     size?: number;
 }) {
@@ -36,7 +37,9 @@ export function ToolIcon({
                     <Tooltip>
                         <TooltipTrigger>
                             <div
-                                onClick={onClick}
+                                onClick={
+                                    onClick as MouseEventHandler<HTMLDivElement>
+                                }
                                 className={
                                     grip
                                         ? "w-[50px] " + classes
@@ -64,7 +67,7 @@ export function ToolIcon({
     } else {
         return (
             <div
-                onClick={onClick}
+                onClick={onClick as MouseEventHandler<HTMLDivElement>}
                 className={
                     grip
                         ? "w-[50px] " + classes

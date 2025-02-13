@@ -1201,10 +1201,10 @@ esutils@^2.0.2:
   resolved "https://registry.npmjs.org/esutils/-/esutils-2.0.3.tgz"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-fabric@^6.4.3:
-  version "6.4.3"
-  resolved "https://registry.npmjs.org/fabric/-/fabric-6.4.3.tgz"
-  integrity sha512-z/bJna3kWOBv+wmvVK4XxUQgCXLGb//VaSr5xPFIP708obH7472uuVsWbXam+xq+y21bLBtr4OHO1HuJyYi4FQ==
+fabric@^6.5.4:
+  version "6.5.4"
+  resolved "https://registry.npmjs.org/fabric/-/fabric-6.5.4.tgz"
+  integrity sha512-X+O8G+3aDQSp3lxRekvIy/gMwtzcjAG7IvGXjb4PeUD6+nUJfSfGnaEWpni9aAcXuGz8zXhpMQQELV+4FfRTwA==
   optionalDependencies:
     canvas "^2.11.2"
     jsdom "^20.0.1"

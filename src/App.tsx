@@ -9,7 +9,6 @@ import {
     Path,
     Point,
     Rect,
-    Shadow,
     Textbox,
     TPointerEvent,
     TPointerEventInfo,
@@ -25,6 +24,7 @@ import {
 } from "lucide-react";
 import SettingBox from "./settingBox";
 import { FabricObject } from "fabric";
+import addNode from "./Node";
 
 declare module "fabric" {
     interface FabricObject {
@@ -51,10 +51,9 @@ function App() {
             //     width: window.innerWidth,
             //     height: window.innerHeight,
             // });
-
             //The following logic is depreciated needs to be changed
-            canvas.setWidth(window.innerWidth);
-            canvas.setHeight(window.innerHeight);
+            // canvas.setWidth(window.innerWidth);
+            // canvas.setHeight(window.innerHeight);
         }
     });
 
@@ -114,104 +113,7 @@ function App() {
         padding: 10,
     };
 
-    const addNode = () => {
-        const nodeWidth = 180;
-        const nodeHeight = 50;
-        const rounded = 5;
-        const defaultShadowOffset = 5;
-        const defaultAccentWidth = 15;
-        const defaultTextSize = 16;
-        const padding = 5;
-
-        if (canvas) {
-            const brutalShadow = new Shadow({
-                color: "#000",
-                offsetX: defaultShadowOffset,
-                offsetY: defaultShadowOffset,
-            });
-
-            const mainRect = new Rect({
-                width: nodeWidth,
-                height: nodeHeight,
-                fill: "white",
-                rx: rounded,
-                ry: rounded,
-                stroke: "black",
-                strokeWidth: 1,
-                strokeUniform: true,
-                shadow: brutalShadow,
-            });
-
-            const highlightRect = new Rect({
-                width: nodeWidth,
-                height: nodeHeight,
-                stroke: "black",
-                strokeWidth: 1,
-                strokeUniform: true,
-                rx: rounded,
-                ry: rounded,
-                left: 0,
-                top: 0,
-                fill: "#FF0000",
-            });
-
-            const clipRect = new Rect({
-                width: defaultAccentWidth,
-                height: nodeHeight,
-                left: -nodeWidth / 2,
-                top: -nodeHeight / 2,
-            });
-
-            highlightRect.clipPath = clipRect;
-
-            const text = new Textbox("Node1", {
-                fontSize: defaultTextSize,
-                fill: "black",
-                top: nodeHeight / 2,
-                left: defaultAccentWidth + padding,
-                width: nodeWidth - defaultAccentWidth - 2 * padding,
-                fontFamily: "REM",
-                originY: "center",
-                textAlign: "center",
-                strokeUniform: true,
-            });
-
-            const nodeGroup = new Group([mainRect, highlightRect, text], {
-                left: 425,
-                top: 300,
-            });
-
-            canvas.add(nodeGroup);
-
-            nodeGroup.on("mousedblclick", () => {
-                text.enterEditing();
-            });
-
-            nodeGroup.on("scaling", () => {
-                nodeGroup._objects[0].set({
-                    shadow: {
-                        offsetX: defaultShadowOffset / nodeGroup.scaleX,
-                        offsetY: defaultShadowOffset / nodeGroup.scaleY,
-                    },
-                    rx: rounded / nodeGroup.scaleX,
-                    ry: rounded / nodeGroup.scaleY,
-                });
-                nodeGroup._objects[1].set({
-                    rx: rounded / nodeGroup.scaleX,
-                    ry: rounded / nodeGroup.scaleY,
-                });
-                nodeGroup._objects[2].set({
-                    fontSize: defaultTextSize / nodeGroup.scaleX,
-                    top: nodeHeight / 2 / nodeGroup.scaleY / defaultTextSize,
-                });
-                clipRect.set({
-                    width: defaultAccentWidth / nodeGroup.scaleX,
-                });
-            });
-        }
-    };
-
-    const addLine = () => {
+    function addLine() {
         let drawing = false;
         let Line: Path;
         let startPoint = new Point();
@@ -384,9 +286,9 @@ function App() {
                 endpointer.y
             );
         }
-    };
+    }
 
-    const addText = () => {
+    function addText() {
         if (canvas) {
             const nodeWidth = 180;
             const nodeHeight = 50;
@@ -415,9 +317,9 @@ function App() {
 
             canvas.add(text);
         }
-    };
+    }
 
-    const addShapes = () => {
+    function addShapes() {
         if (canvas) {
             const rect = new Rect({
                 width: 360,
@@ -430,7 +332,7 @@ function App() {
             canvas.centerObject(rect);
             canvas.add(rect);
         }
-    };
+    }
 
     return (
         <>
@@ -444,7 +346,12 @@ function App() {
                 <ToolIcon tooltip="select">
                     <MousePointer2 color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
-                <ToolIcon tooltip="add Node" onClick={addNode}>
+                <ToolIcon
+                    tooltip="add Node"
+                    onClick={() => {
+                        addNode(canvas);
+                    }}
+                >
                     <Workflow color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
                 <ToolIcon tooltip="add shapes" onClick={addShapes}>
