@@ -1,12 +1,11 @@
 import { Canvas, Group, Rect, Shadow, Textbox } from "fabric";
 
-export default function addNode(canvas: Canvas | null) {
+export default function addNode(canvas: Canvas | null, objectID: string) {
     const nodeWidth = 180;
     const nodeHeight = 50;
     let realWidth = 180;
     let realHeight = 180;
     let textScaleX = 1;
-    let textScaleY = 1;
     const rounded = 5;
     const defaultShadowOffset = 5;
     const defaultAccentWidth = 15;
@@ -55,7 +54,6 @@ export default function addNode(canvas: Canvas | null) {
     const text = new Textbox("Node1", {
         fontSize: defaultTextSize,
         fill: "#000",
-        backgroundColor: "red",
         top: nodeHeight / 2,
         left: defaultAccentWidth + padding,
         width: nodeWidth - defaultAccentWidth - 2 * padding,
@@ -70,33 +68,14 @@ export default function addNode(canvas: Canvas | null) {
         left: 425,
         top: 300,
         lockScalingFlip: true,
+        id: objectID,
     });
 
     text.on("changed", () => {
-        console.log(text.height);
-        console.log(mainRect.height);
         mainRect.set({
             width:
                 (text.width + (defaultAccentWidth + 2 * padding)) / textScaleX,
         });
-        if (text.height > mainRect.height) {
-            const changeHeight =
-                (text.height + 2 * padding + 2 * defaultStrokeWidth) /
-                textScaleY;
-            mainRect.set({
-                height: changeHeight,
-            });
-            highlightRect.set({
-                height: changeHeight,
-            });
-            clipRect.set({
-                top: -changeHeight / 2,
-                height: changeHeight,
-            });
-            text.set({
-                top: (defaultTextSize + padding + defaultStrokeWidth) / 2,
-            });
-        }
         nodeGroup.setCoords();
         canvas?.requestRenderAll();
     });
@@ -122,7 +101,6 @@ export default function addNode(canvas: Canvas | null) {
         realWidth = nodeWidth * nodeGroup.scaleX;
         realHeight = nodeHeight * nodeGroup.scaleY;
         textScaleX = nodeGroup.scaleX;
-        textScaleY = nodeGroup.scaleY;
         if (textEditing) {
             text.exitEditing();
             textEditing = !textEditing;
