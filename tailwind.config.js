@@ -6,7 +6,7 @@ export default {
         extend: {
             colors: {
                 outline: "#535353",
-                primary: "#7E00D2",
+                primary: "#6200ff",
                 background: "hsl(var(--background))",
                 foreground: "hsl(var(--foreground))",
                 card: {

@@ -6,7 +6,6 @@ import {
     Group,
     InteractiveFabricObject,
     Point,
-    Rect,
     Textbox,
 } from "fabric";
 import TitleCard, { LogoAndTitle, UndoRedo } from "./TitleCard";
@@ -15,8 +14,12 @@ import {
     MousePointer2,
     MoveUpRight,
     Shapes,
+    Square,
     Type,
     Workflow,
+    LucideCircle,
+    Triangle,
+    Diamond,
 } from "lucide-react";
 import SettingBox from "./settingBox";
 import { FabricObject } from "fabric";
@@ -24,6 +27,8 @@ import addNode from "./Node";
 import genID from "./utils/idGen";
 import addLine from "./Lines";
 import { joinPoints } from "./utils/types";
+import * as HoverCard from "@radix-ui/react-hover-card";
+import addSquare, { addCircle } from "./Shapes";
 
 declare module "fabric" {
     interface FabricObject {
@@ -175,21 +180,6 @@ function App() {
         }
     }
 
-    function addShapes() {
-        if (canvas) {
-            const rect = new Rect({
-                width: 360,
-                height: 120,
-                fill: null,
-                stroke: "black",
-                strokeWidth: 3,
-                rx: 10,
-            });
-            canvas.centerObject(rect);
-            canvas.add(rect);
-        }
-    }
-
     return (
         <>
             <canvas ref={canvasRef}></canvas>
@@ -211,9 +201,56 @@ function App() {
                 >
                     <Workflow color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
-                <ToolIcon tooltip="add shapes" onClick={addShapes}>
-                    <Shapes color="#000" size={20} strokeWidth={1.5} />
-                </ToolIcon>
+                <HoverCard.Root>
+                    <HoverCard.Trigger>
+                        <ToolIcon>
+                            <Shapes color="#000" size={20} strokeWidth={1.5} />
+                        </ToolIcon>
+                    </HoverCard.Trigger>
+                    <HoverCard.Portal>
+                        <HoverCard.Content>
+                            <div className="p-2 h-auto bg-white grid grid-flow-row grid-cols-2 justify-between items-center rounded-md shadow-md gap-1">
+                                <ToolIcon
+                                    onClick={() => {
+                                        addSquare(canvas);
+                                    }}
+                                >
+                                    <Square
+                                        color="#000"
+                                        size={20}
+                                        strokeWidth={1.5}
+                                    />
+                                </ToolIcon>
+                                <ToolIcon
+                                    onClick={() => {
+                                        addCircle(canvas);
+                                    }}
+                                >
+                                    <LucideCircle
+                                        size={20}
+                                        color="#000"
+                                        strokeWidth={1.5}
+                                    />
+                                </ToolIcon>
+                                <ToolIcon>
+                                    <Triangle
+                                        size={20}
+                                        color="#000000"
+                                        strokeWidth={1.5}
+                                    />
+                                </ToolIcon>
+                                <ToolIcon>
+                                    <Diamond
+                                        size={20}
+                                        color="#000000"
+                                        strokeWidth={1.5}
+                                    />
+                                </ToolIcon>
+                            </div>
+                        </HoverCard.Content>
+                    </HoverCard.Portal>
+                </HoverCard.Root>
+
                 <ToolIcon
                     tooltip="add line"
                     onClick={() => {
@@ -227,9 +264,6 @@ function App() {
                 <ToolIcon tooltip="add text" onClick={addText}>
                     <Type color="#000" size={20} strokeWidth={1.5} />
                 </ToolIcon>
-                {/* <ToolIcon tooltip="add custom objects" onClick={test}>
-                    <Plus color="#000" size={20} strokeWidth={1.5} />
-                </ToolIcon> */}
             </ToolBar>
         </>
     );

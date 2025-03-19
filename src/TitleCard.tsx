@@ -12,10 +12,12 @@ export default function TitleCard({ children }: { children: JSX.Element[] }) {
 }
 
 export function LogoAndTitle() {
-    const [width, setWidth] = useState(64);
+    const [fileName, setFileName] = useState(getFileNameFromLocalStorage);
+    const width = (fileName.length + 1) * 8;
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setWidth((e.target.value.length + 1) * 8);
+        localStorage.setItem("graphatory:filename", e.target.value);
+        setFileName(e.target.value);
     };
 
     return (
@@ -25,7 +27,7 @@ export function LogoAndTitle() {
                 <div className="flex gap-1">
                     <input
                         type="text"
-                        defaultValue={"Untitled"}
+                        value={fileName}
                         onChange={handleChange}
                         style={{ width: width }}
                         className="focus:outline-none font-REM"
@@ -49,4 +51,13 @@ export function LogoAndTitle() {
 
 export function UndoRedo() {
     return <div></div>;
+}
+
+function getFileNameFromLocalStorage(): string {
+    const getName = localStorage.getItem("graphatory:filename");
+    if (getName) {
+        return getName;
+    }
+
+    return "Untitled";
 }
