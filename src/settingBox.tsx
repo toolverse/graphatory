@@ -24,8 +24,8 @@ export default function SettingBox({ canvas }: { canvas: Canvas | null }) {
     );
     const [objectPosLeft, setObjectPosLeft] = useState(10);
     const [objectPosTop, setObjectPosTop] = useState(10);
-    const [objectWidth, setObjectWidth] = useState(0);
-    const [objectHeight, setObjectHeight] = useState(0);
+    // const [objectWidth, setObjectWidth] = useState(0);
+    // const [objectHeight, setObjectHeight] = useState(0);
     const [objectColor, setObjectColor] = useState("");
     useEffect(() => {
         if (canvas) {
@@ -45,8 +45,8 @@ export default function SettingBox({ canvas }: { canvas: Canvas | null }) {
     function clearSettings() {
         setObjectPosLeft(0);
         setObjectPosTop(0);
-        setObjectWidth(0);
-        setObjectHeight(0);
+        // setObjectWidth(0);
+        // setObjectHeight(0);
         setObjectColor("");
     }
 
@@ -56,8 +56,8 @@ export default function SettingBox({ canvas }: { canvas: Canvas | null }) {
         setActiveObject(obj);
         setObjectPosLeft(obj.left);
         setObjectPosTop(obj.top + obj.height + 20);
-        setObjectHeight(obj.height - 1);
-        setObjectWidth(obj.width - 1);
+        // setObjectHeight(obj.height - 1);
+        // setObjectWidth(obj.width - 1);
 
         if (obj.type === "group") {
             setObjectColor(obj.toObject().objects[1].fill);
